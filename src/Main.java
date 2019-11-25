@@ -1,13 +1,10 @@
 public class Main {
 
-    static private int dir[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; // right, left, up, down respectively
+    static private int dir[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; // directions : right, left, up, down respectively
     static int num , flag;
 
-    double MAXN = 1e6 + 5;
-    int P = 99991;
     static int N = 5;
 
-    long ll;
     static char[][] s = {{'R', 'G', 'B', 'W'}, {'W', 'W', 'W', 'W'}, {'R', 'G', 'B', 'W'}, {'Y', 'W', 'W', 'Y'}};
 
     static int vis[][] = new int[N][N];
@@ -32,12 +29,10 @@ public class Main {
             if (f == 1)
                 break;
         }
-        //memset(vis, 0, sizeof(vis));
 
         num = 0;
         flag = 0;
         DFS(x, y, ch);
-        //printf("%d %d\n",num,flag);
 
         if (flag == 1)
             System.out.println("solvable\n");
@@ -60,9 +55,9 @@ public class Main {
             return ;
         }
 
-        num++;                    //使用该节点
+        num++;
         vis[x][y] = 1;
-        //printf("%d\n",num);
+
         if (num >= 16) {
             flag = 1;
             return;
@@ -74,7 +69,6 @@ public class Main {
             if (judge(ax, ay) == 0 && vis[ax][ay] == 0) {
                 if (s[ax][ay] == ch)
                 {
-
                     num++;
                     vis[ax][ay] = 1;
                     if (num == 16) {
