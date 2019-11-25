@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.HashMap;
 
 public class Main {
 
@@ -11,9 +12,11 @@ public class Main {
 
     static int vis[][] = new int[N][N];
 
+    static HashMap<Character,String> colorChar = new HashMap<Character, String>();
+
     public static void main(String[] args) {
 
-
+        colorCharinit(colorChar);
         input = readFile("input1.txt");
         int x = 0;
         int y = 0;
@@ -43,6 +46,19 @@ public class Main {
             System.out.println("not solvable\n");
     }
 
+    private static void colorCharinit(HashMap<Character, String> colorChar) {
+
+        colorChar.put('R', "\u001B[31m" ); //Red
+        colorChar.put('G', "\u001B[32m" ); //Green
+        colorChar.put('Y', "\u001B[33m" ); //Yellow
+        colorChar.put('B', "\u001B[34m" ); //Blue
+        colorChar.put('P', "\u001b[35;1m" ); //Pink
+        colorChar.put('O', "\u001b[33;1m" ); //Orange
+        colorChar.put('C', "\u001B[36m" ); //Cyan
+        colorChar.put('M', "\u001b[35m" ); //Magenta
+        colorChar.put('Z', "\u001b[0m" ); //Magenta
+    }
+
     private static char[][] readFile(String fileName) {
 
         char input[][] = new char [N][N];
@@ -67,8 +83,17 @@ public class Main {
 
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input[0].length; j++) {
-                System.out.print(input[i][j]);
+
+                if(colorChar.containsKey(input[i][j]))
+                {
+                    System.out.print(colorChar.get(input[i][j]) + input[i][j] + " ");
+                }
+                else
+                {
+                    System.out.print(colorChar.get('Z') + "\u25A1" + " "); //Print Square
+                }
             }
+            System.out.println(colorChar.get('Z'));
             System.out.println();
         }
 
@@ -86,7 +111,6 @@ public class Main {
         if (input[x][y] != 'W' && input[x][y] != ch)
             return ;
         if (judge(x, y) != 0 || vis[x][y] != 0) {
-            System.out.println("Reached 2");
             return ;
         }
 
@@ -107,7 +131,6 @@ public class Main {
                     num++;
                     vis[ax][ay] = 1;
                     if (num == N*N) {
-                        System.out.println("Reached 2");
                         flag = 1;
                         return;
                     }
@@ -130,7 +153,6 @@ public class Main {
             }
         }
         num--;
-
         vis[x][y] = 0;
     }
 }
