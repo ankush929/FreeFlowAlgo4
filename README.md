@@ -37,4 +37,4 @@ WWWWWWW
 Sample output:
 
 
-![Output Image](output.png)
+![Output Image](output.png =219X242)
