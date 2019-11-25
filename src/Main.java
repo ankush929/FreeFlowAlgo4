@@ -41,9 +41,9 @@ public class Main {
         DFS(x, y, ch);
 
         if (flag == 1)
-            System.out.println("solvable\n");
+            System.out.println("The given puzzle is solvable!\n");
         else
-            System.out.println("not solvable\n");
+            System.out.println("The given puzzle is not solvable!\n");
     }
 
     private static void colorCharinit(HashMap<Character, String> colorChar) {
@@ -56,7 +56,8 @@ public class Main {
         colorChar.put('O', "\u001b[33;1m" ); //Orange
         colorChar.put('C', "\u001B[36m" ); //Cyan
         colorChar.put('M', "\u001b[35m" ); //Magenta
-        colorChar.put('Z', "\u001b[0m" ); //Magenta
+        colorChar.put('w', "\u001b[37m" ); //White
+        colorChar.put('Z', "\u001b[0m" ); //RESET
     }
 
     private static char[][] readFile(String fileName) {
@@ -81,6 +82,7 @@ public class Main {
             e.printStackTrace();
         }
 
+        System.out.println();
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input[0].length; j++) {
 
