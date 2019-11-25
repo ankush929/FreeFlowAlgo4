@@ -37,4 +37,4 @@ WWWWWWW
 Sample output:
 
 
-![Output Image](output.png)
+<img src="output.png" alt="Output Image" width="219" height="242"/>
