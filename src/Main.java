@@ -3,41 +3,47 @@ import java.util.HashMap;
 
 public class Main {
 
-    static private int dir[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; // directions : right, left, up, down respectively
-    static int num , flag;
+    static private int direction[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; // directions : right, left, up, down respectively
+    private static int count , flag; //Final flag
 
-    static int N = 7;
+    private static int N = 7;
 
-    static char[][] input = new char[N][N];
+    private static char[][] input = new char[N][N];
 
-    static int vis[][] = new int[N][N];
+    private static int visitor[][] = new int[N][N];
 
-    static HashMap<Character,String> colorChar = new HashMap<Character, String>();
+    private static HashMap<Character,String> colorChar = new HashMap<>();
+
+    private static char emptyBlock = 'W';
+
+    private static String fileName = "input1.txt";
 
     public static void main(String[] args) {
 
-        colorCharinit(colorChar);
-        input = readFile("input1.txt");
+        colorCharinit(colorChar); //define Color for Chars
+        input = readFile(fileName); // read file into Input Matrix
+
+        count = 0;
+        flag = 0; //init flag to zero
+
         int x = 0;
         int y = 0;
-        int f = 0;
+        boolean foundColor = false;
 
         char ch = 0;
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input[0].length; j++)
-                if (input[i][j] != 'W') {
+                if (input[i][j] != emptyBlock) {
                     x = i;
                     y = j;
-                    ch = input[i][j];
-                    f = 1;
+                    ch = input[i][j]; // Found Color Def Char in Matrix
+                    foundColor = true;
                     break;
                 }
-            if (f == 1)
+            if(foundColor)
                 break;
         }
 
-        num = 0;
-        flag = 0;
         DFS(x, y, ch);
 
         if (flag == 1)
@@ -60,7 +66,7 @@ public class Main {
         colorChar.put('Z', "\u001b[0m" ); //RESET
     }
 
-    private static char[][] readFile(String fileName) {
+    private static char[][] readFile(String fileName) { // read file and store in 2d matrix (input)
 
         char input[][] = new char [N][N];
         File file = new File(fileName);
@@ -102,59 +108,55 @@ public class Main {
         return input;
     }
 
-    static int judge(int x, int y) {
+    static boolean checkBounds(int x, int y) {  //check Bounds for x and y
         if (0 <= x && x < N && 0 <= y && y < N)
-            return 0;
-        return 1;
+            return false;
+        return true;
     }
 
-    static void DFS(int x, int y, char ch) {
+    static void DFS(int x, int y, char ch) { //set flag = 0 if solvable, else set flag = 1
 
-        if (input[x][y] != 'W' && input[x][y] != ch)
-            return ;
-        if (judge(x, y) != 0 || vis[x][y] != 0) {
-            return ;
+        if (checkBounds(x, y) || visitor[x][y] != 0) {
+            return;
         }
 
-        num++;
-        vis[x][y] = 1;
+        count++;
+        visitor[x][y] = 1;
 
-        if (num >= N*N) {
+        if (count >= N*N) {
             flag = 1;
             return;
         }
-        for (int i = 0; i < dir.length; i++) {
+        for (int i = 0; i < direction.length; i++) {  //traverse in all four directions
 
-            int ax = x + dir[i][0];
-            int ay = y + dir[i][1];
-            if (judge(ax, ay) == 0 && vis[ax][ay] == 0) {
-                if (input[ax][ay] == ch)
+            int nextX = x + direction[i][0];
+            int nextY = y + direction[i][1];
+
+            if (!checkBounds(nextX, nextY) && visitor[nextX][nextY] == 0) {
+                if (input[nextX][nextY] == ch)
                 {
-                    num++;
-                    vis[ax][ay] = 1;
-                    if (num == N*N) {
+                    count++;
+                    visitor[nextX][nextY] = 1;
+                    if (count == N*N) {
                         flag = 1;
                         return;
                     }
                     for (int ii = 0; ii < N; ii++)
                         for (int jj = 0; jj < N; jj++)
-                            if (input[ii][jj] != 'W' && vis[ii][jj] == 0 && input[ii][jj] != ch) {
-                                int a = ii;
-                                int b = jj;
+                            if (input[ii][jj] != emptyBlock && visitor[ii][jj] == 0 && input[ii][jj] != ch) {
                                 char c = input[ii][jj];
-                                DFS(a, b, c);
+                                DFS(ii, jj, c);
                             }
-                    num--;
-                    vis[ax][ay] = 0;
+                    count--;
+                    visitor[nextX][nextY] = 0;
                 } else {
-                    if (input[ax][ay] != 'W')
-                       continue;
-                    else
-                        DFS(ax,ay,ch);
+                    if (input[nextX][nextY] == 'W') {
+                        DFS(nextX, nextY, ch);
+                    }
                 }
             }
         }
-        num--;
-        vis[x][y] = 0;
+        count--;
+        visitor[x][y] = 0;
     }
 }
