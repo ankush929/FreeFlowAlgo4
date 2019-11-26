@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Main {
 
@@ -10,13 +11,17 @@ public class Main {
 
     private static char[][] input = new char[N][N];
 
-    private static int visitor[][] = new int[N][N];
+    private static char visitor[][] = new char[N][N];
 
     private static HashMap<Character,String> colorChar = new HashMap<>();
+
+    private static HashSet<Character> charSet = new HashSet<>();
 
     private static char emptyBlock = 'W';
 
     private static String fileName = "input1.txt";
+
+    private static boolean end = false;
 
     public static void main(String[] args) {
 
@@ -121,7 +126,8 @@ public class Main {
         }
 
         count++;
-        visitor[x][y] = 1;
+        visitor[x][y] = ch;
+        charSet.add(visitor[x][y]);
 
         if (count >= N*N) {
             flag = 1;
@@ -136,9 +142,12 @@ public class Main {
                 if (input[nextX][nextY] == ch)
                 {
                     count++;
-                    visitor[nextX][nextY] = 1;
+                    visitor[nextX][nextY] = ch;
+                    charSet.add(visitor[x][y]);
+
                     if (count == N*N) {
                         flag = 1;
+                        printMatrix();
                         return;
                     }
                     for (int ii = 0; ii < N; ii++)
@@ -149,6 +158,7 @@ public class Main {
                             }
                     count--;
                     visitor[nextX][nextY] = 0;
+                    charSet.add(visitor[x][y]);
                 } else {
                     if (input[nextX][nextY] == 'W') {
                         DFS(nextX, nextY, ch);
@@ -156,7 +166,28 @@ public class Main {
                 }
             }
         }
+
         count--;
         visitor[x][y] = 0;
+        charSet.add(visitor[x][y]);
+    }
+
+    static void printMatrix()
+    {
+        System.out.println();
+        for (int i = 0; i < visitor.length; i++) {
+            for (int j = 0; j < visitor[0].length; j++) {
+
+                if(colorChar.containsKey(visitor[i][j]))
+                {
+                    System.out.print(colorChar.get(visitor[i][j]) + visitor[i][j] + " ");
+                }
+                else
+                {
+                    System.out.print(visitor[i][j] + " "); //Print Square
+                }
+            }
+            System.out.println();
+        }
     }
 }
