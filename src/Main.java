@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 public class Main {
 
+    private static final long ANIMATION_SPEED = 100; // lower is faster
+
     static private int direction[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; // directions : right, left, up, down respectively
     private static int count , flag; //Final flag
 
@@ -15,13 +17,17 @@ public class Main {
 
     private static HashMap<Character,String> colorChar = new HashMap<>();
 
-    private static HashSet<Character> charSet = new HashSet<>();
-
     private static char emptyBlock = 'W';
 
     private static String fileName = "input1.txt";
 
     private static boolean end = false;
+
+    static boolean stop = false;
+
+    static boolean multipleOutputs = true;
+
+    static boolean animate = false;
 
     public static void main(String[] args) {
 
@@ -119,58 +125,65 @@ public class Main {
         return true;
     }
 
-    static void DFS(int x, int y, char ch) { //set flag = 0 if solvable, else set flag = 1
+     static void DFS(int x, int y, char ch) { //set flag = 0 if solvable, else set flag = 1
 
-        if (checkBounds(x, y) || visitor[x][y] != 0) {
-            return;
-        }
+         if (stop) { // to prevent multiple outputs.
+             return;
+         }
+             if (checkBounds(x, y) || visitor[x][y] != 0) {
+                 return;
+             }
 
-        count++;
-        visitor[x][y] = ch;
-        charSet.add(visitor[x][y]);
+             count++;
+             visitor[x][y] = ch;
+             clearScreen();
 
-        if (count >= N*N) {
-            flag = 1;
-            return;
-        }
-        for (int i = 0; i < direction.length; i++) {  //traverse in all four directions
+         if (count >= N * N) {
+                 flag = 1;
+             if(!multipleOutputs)
+                 stop = true;
+                 return;
+             }
+             for (int i = 0; i < direction.length; i++) {  //traverse in all four directions
 
-            int nextX = x + direction[i][0];
-            int nextY = y + direction[i][1];
+                 int nextX = x + direction[i][0];
+                 int nextY = y + direction[i][1];
 
-            if (!checkBounds(nextX, nextY) && visitor[nextX][nextY] == 0) {
-                if (input[nextX][nextY] == ch)
-                {
-                    count++;
-                    visitor[nextX][nextY] = ch;
-                    charSet.add(visitor[x][y]);
+                 if (!checkBounds(nextX, nextY) && visitor[nextX][nextY] == 0) {
+                     if (input[nextX][nextY] == ch) {
+                         count++;
+                         visitor[nextX][nextY] = ch;
+                         clearScreen();
 
-                    if (count == N*N) {
-                        flag = 1;
-                        printMatrix();
-                        return;
-                    }
-                    for (int ii = 0; ii < N; ii++)
-                        for (int jj = 0; jj < N; jj++)
-                            if (input[ii][jj] != emptyBlock && visitor[ii][jj] == 0 && input[ii][jj] != ch) {
-                                char c = input[ii][jj];
-                                DFS(ii, jj, c);
-                            }
-                    count--;
-                    visitor[nextX][nextY] = 0;
-                    charSet.add(visitor[x][y]);
-                } else {
-                    if (input[nextX][nextY] == 'W') {
-                        DFS(nextX, nextY, ch);
-                    }
-                }
-            }
-        }
+                         if (count == N * N) {
+                             flag = 1;
+                             printMatrix();
+                             if(!multipleOutputs)
+                                 stop = true;
+                             return;
+                         }
+                         for (int ii = 0; ii < N; ii++)
+                             for (int jj = 0; jj < N; jj++)
+                                 if (input[ii][jj] != emptyBlock && visitor[ii][jj] == 0 && input[ii][jj] != ch) {
+                                     char c = input[ii][jj];
+                                     DFS(ii, jj, c);
+                                 }
+                         count--;
+                         visitor[nextX][nextY] = 0;
+                         clearScreen();
 
-        count--;
-        visitor[x][y] = 0;
-        charSet.add(visitor[x][y]);
-    }
+                     } else {
+                         if (input[nextX][nextY] == 'W') {
+                             DFS(nextX, nextY, ch);
+                         }
+                     }
+                 }
+             }
+
+             count--;
+             visitor[x][y] = 0;
+             clearScreen();
+     }
 
     static void printMatrix()
     {
@@ -188,6 +201,21 @@ public class Main {
                 }
             }
             System.out.println();
+        }
+    }
+
+    public static void clearScreen() {
+
+        if(animate) {
+
+            printMatrix();
+            try {
+                Thread.sleep(ANIMATION_SPEED);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
         }
     }
 }
