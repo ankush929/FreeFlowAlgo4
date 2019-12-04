@@ -4,7 +4,9 @@
 ### Free Flow Solver using DFS (Depth First Search)
 
 The project is aimed to create an automated solver for the Free Flow Game.
-For now, the algorithm shows whether input matrix is solvable or not.
+The constants (filename, Gridsixe, Animation switch, Multiple Outputs) are defined in the Constants,java
+
+The algorithm prints the final solution with colored paths for each input color.
 
 Inputs are provided in input1.txt
 
