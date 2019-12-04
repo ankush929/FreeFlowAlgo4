@@ -37,4 +37,4 @@ WWWWWWW
 Sample output:
 
 
-<img src="output1.png" alt="Output Image" width="219" height="242"/>
+<img src="output1.png" alt="Output Image" width="319" height="242"/>
